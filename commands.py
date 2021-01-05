@@ -1,9 +1,11 @@
 # Add new commands in this file
 # Also modify `__init__.py` to expose the methods in the package
 from utils import get
+from config import Config
+
 
 async def getUserInfo(handles):
-    """ 
+    """
     Refer: https://codeforces.com/apiHelp/methods#user.info
 
     Fetches the user info of the given handles
@@ -15,7 +17,7 @@ async def getUserInfo(handles):
 
     Returns
     -------
-    list 
+    list
         List of json objects contating user info for the handles
     """
     method_name = 'user.info'
@@ -33,36 +35,43 @@ async def contestList():
     -------
     Returns a list of Contest objects.
 
-    See Also: https://codeforces.com/apiHelp/objects#Contest 
+    See Also: https://codeforces.com/apiHelp/objects#Contest
     """
     pass
 
 
-async def problem(tags):
-    """ 
+async def problem(tags, counts=2):
+    """
     Refer: https://codeforces.com/apiHelp/methods#problemset.problems
 
     Fetches a list of all problems filtered by tags
 
     Parameters
     ----------
-    tags: str 
+    tags: str
         semicolor `;` seperated list of tags
 
     Returns
-    ------- 
+    -------
     List of Problem objects
 
     See Also: https://codeforces.com/apiHelp/objects#Problem
     """
+    methodName = "problemset.problems"
+    methodParams = "tags=" + tags
 
+    problems = await get(methodName, methodParams)
+    counts = min(counts, Config['MAX_PROBLEMS'])
+    splitProblems = problems['result']['problems'][:counts]
+
+    return splitProblems
     pass
 
 
-# For Testing 
-async def test(): 
-    # Add debug/testing code here 
-    pass 
+# For Testing
+async def test():
+    # Add debug/testing code here
+    pass
 
 if __name__ == "__main__":
     import asyncio
