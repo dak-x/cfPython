@@ -22,24 +22,40 @@ async def getUserInfo(handles):
     list
         List of json objects contating user info for the handles
     """
-    method_name = 'user.info'
-    handle_params = 'handles=' + ';'.join(handles)
-    return await get(method_name, handle_params)
+    methodName = 'user.info'
+    handleParams = 'handles=' + ';'.join(handles)
+    return await get(methodName, handleParams)
 
 
-async def contestList():
+async def contestList(all=False):
     """
     Refer: https://codeforces.com/apiHelp/methods#contest.list
 
-    Fetches information about all available contests
+    Fetches information about all the future contests
 
+    Parameters
+    ---------- 
+    all: bool 
+        false: Only fetch official CF division contests
+        true: fetch all gymkhana contests as well
     Returns
     -------
     Returns a list of Contest objects.
 
     See Also: https://codeforces.com/apiHelp/objects#Contest
     """
-    pass
+    methodName = 'contest.list'
+    methodParam = 'gym=' + str(all)
+
+    # GET the json request
+    allContests = (await get(methodName, methodParam))['result']
+
+    # Filter the response for only future contests
+    # define the filter clause lambda 
+    clause = lambda x: x['phase'] == "BEFORE"
+    futureContests = list(filter(clause,allContests))
+
+    return futureContests
 
 
 async def problem(tags, counts=2):
@@ -62,21 +78,29 @@ async def problem(tags, counts=2):
     methodName = "problemset.problems"
     methodParams = "tags=" + ";".join(tags)
 
+    # Get the json request
     problems = await get(methodName, methodParams)
+
+    # Only get a max-amount (N) of problems
+    # from the responce problemset
     counts = min(counts, Config['MAX_PROBLEMS'])
+
     allProblems = problems['result']['problems']
     lenProblems = len(allProblems)
+
+    # randomly select the N problems from the problemset
     randomProblemsIdxs = sample(range(lenProblems), counts)
     sampledProblems = [allProblems[i] for i in randomProblemsIdxs]
 
     return sampledProblems
-    pass
 
 
 # For Testing
 async def test():
     # Add debug/testing code here
-    resp = await problem(["number theory"], 15)
+    # resp = await getUserInfo(['sam6134'])
+    # resp_question = await problem(["implementation", "dp"])
+    resp = await contestList()
     print(json.dumps(resp, indent=3))
     return
 
