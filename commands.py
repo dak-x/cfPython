@@ -2,7 +2,6 @@
 # Also modify `__init__.py` to expose the methods in the package
 from utils import get
 
-
 async def getUserInfo(handles):
     """ 
     Refer: https://codeforces.com/apiHelp/methods#user.info
@@ -19,8 +18,9 @@ async def getUserInfo(handles):
     list 
         List of json objects contating user info for the handles
     """
-
-    pass
+    method_name = 'user.info'
+    handle_params = handles.join(';')
+    return await get(method_name, handle_params)
 
 
 async def contestList():
@@ -57,3 +57,14 @@ async def problem(tags):
     """
 
     pass
+
+
+# For Testing 
+async def test(): 
+    # Add debug/testing code here 
+    pass 
+
+if __name__ == "__main__":
+    import asyncio
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(test())
