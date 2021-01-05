@@ -1,4 +1,3 @@
-import json
 import aiohttp
 import asyncio
 
@@ -15,10 +14,17 @@ async def get(name, params):
     """
 
     # construct the url for the request
+    # Examples: 
+    # >>> get("user.info","handles=tourist")
+    # request: 
     request = f'{REQ_PREFIX}{name}?{params}'
+    
+
     # send the request and return the result
     async with aiohttp.ClientSession() as session:
         async with session.get(request) as response:
+            # debug
+            # print(request)
             resp = await response.json()
             await session.close()
             return resp

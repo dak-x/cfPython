@@ -1,7 +1,7 @@
 # Add new commands in this file
 # Also modify `__init__.py` to expose the methods in the package
 from utils import get
-
+import json
 async def getUserInfo(handles):
     """ 
     Refer: https://codeforces.com/apiHelp/methods#user.info
@@ -19,7 +19,7 @@ async def getUserInfo(handles):
         List of json objects contating user info for the handles
     """
     method_name = 'user.info'
-    handle_params = handles.join(';')
+    handle_params = 'handles=' + ';'.join(handles)
     return await get(method_name, handle_params)
 
 
@@ -62,7 +62,9 @@ async def problem(tags):
 # For Testing 
 async def test(): 
     # Add debug/testing code here 
-    pass 
+    resp = await getUserInfo(['sam6134'])
+    print(json.dumps(resp,indent=3))
+    return 
 
 if __name__ == "__main__":
     import asyncio
