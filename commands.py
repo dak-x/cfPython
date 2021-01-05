@@ -3,6 +3,7 @@
 from utils import get
 import json
 from config import Config
+from random import sample
 
 
 async def getUserInfo(handles):
@@ -49,8 +50,8 @@ async def problem(tags, counts=2):
 
     Parameters
     ----------
-    tags: str
-        semicolor `;` seperated list of tags
+    tags: list
+        list of tags
 
     Returns
     -------
@@ -59,22 +60,25 @@ async def problem(tags, counts=2):
     See Also: https://codeforces.com/apiHelp/objects#Problem
     """
     methodName = "problemset.problems"
-    methodParams = "tags=" + tags
+    methodParams = "tags=" + ";".join(tags)
 
     problems = await get(methodName, methodParams)
     counts = min(counts, Config['MAX_PROBLEMS'])
-    splitProblems = problems['result']['problems'][:counts]
+    allProblems = problems['result']['problems']
+    lenProblems = len(allProblems)
+    randomProblemsIdxs = sample(range(lenProblems), counts)
+    sampledProblems = [allProblems[i] for i in randomProblemsIdxs]
 
-    return splitProblems
+    return sampledProblems
     pass
 
 
-# For Testing 
-async def test(): 
-    # Add debug/testing code here 
-    resp = await getUserInfo(['sam6134'])
-    print(json.dumps(resp,indent=3))
-    return 
+# For Testing
+async def test():
+    # Add debug/testing code here
+    resp = await problem(["number theory"], 15)
+    print(json.dumps(resp, indent=3))
+    return
 
 if __name__ == "__main__":
     import asyncio
