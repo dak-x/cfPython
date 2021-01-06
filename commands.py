@@ -1,8 +1,8 @@
 # Add new commands in this file
 # Also modify `__init__.py` to expose the methods in the package
-from utils import get
+from .utils import get
 import json
-from config import Config
+from .config import Config
 from random import sample
 
 
@@ -27,7 +27,7 @@ async def getUserInfo(handles):
     return await get(methodName, handleParams)
 
 
-async def contestList(all=False):
+async def getContests(all=False):
     """
     Refer: https://codeforces.com/apiHelp/methods#contest.list
 
@@ -58,7 +58,7 @@ async def contestList(all=False):
     return futureContests
 
 
-async def problem(tags, counts=2):
+async def getProblem(tags, counts=2):
     """
     Refer: https://codeforces.com/apiHelp/methods#problemset.problems
 
@@ -99,8 +99,8 @@ async def problem(tags, counts=2):
 async def test():
     # Add debug/testing code here
     # resp = await getUserInfo(['sam6134'])
-    # resp_question = await problem(["implementation", "dp"])
-    resp = await contestList()
+    # resp_question = await getProblem(["implementation", "dp"])
+    resp = await getContests()
     print(json.dumps(resp, indent=3))
     return
 
