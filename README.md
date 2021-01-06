@@ -10,7 +10,8 @@ It currently supports only public api methods.
 3. Import the package directly into your project:
 
     <!-- language: lang-python -->
-    from cfPython import * 
+        from cfPython import * 
+        
 4. Check the `__init__.py` to look at the available functions. All neccessary documentation is provided in the function definitions.
 \
 You can also use `__doc__` attribute for the `docstring` for a function or use `help(cfPython.<Method Name>)` to view inside the `python3` shell
